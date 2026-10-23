@@ -12,9 +12,12 @@ import {
   User,
   ShieldCheck,
   ChevronRight,
+  Heart,
+  Trash2,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatINR, getWhatsAppConfirmationMessage, calculateAge } from '../utils/formatters';
+import { WhatsAppReminderCenter } from '../components/WhatsAppReminderCenter';
 
 export const CustomerPortal: React.FC = () => {
   const {
@@ -25,10 +28,17 @@ export const CustomerPortal: React.FC = () => {
     openAuthModal,
     setCurrentView,
     setSelectedParlourSlug,
+    setSelectedStaffSlug,
     parlours,
+    staff,
+    favorites,
+    toggleFavoriteParlour,
+    toggleFavoriteStaff,
+    customerPortalActiveTab: activeTab,
+    setCustomerPortalActiveTab: setActiveTab,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'upcoming' | 'past' | 'profile'>('upcoming');
+  const [favoritesFilter, setFavoritesFilter] = useState<'all' | 'parlours' | 'staff'>('all');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
   // Review modal state
@@ -50,6 +60,11 @@ export const CustomerPortal: React.FC = () => {
   const pastBookings = myBookings.filter(
     (b) => b.status === 'completed' || b.status === 'cancelled'
   );
+
+  // Favorites collections
+  const favoriteParloursList = parlours.filter((p) => favorites.parlourIds.includes(p.id));
+  const favoriteStaffList = staff.filter((s) => favorites.staffIds.includes(s.id));
+  const totalFavoritesCount = favoriteParloursList.length + favoriteStaffList.length;
 
   const handleCopySlip = (booking: typeof bookings[0]) => {
     const msg = getWhatsAppConfirmationMessage({
@@ -141,6 +156,18 @@ export const CustomerPortal: React.FC = () => {
         >
           <Clock className="w-3.5 h-3.5" />
           <span>Past Visits &amp; Reviews ({pastBookings.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('favorites')}
+          className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors flex items-center gap-2 ${
+            activeTab === 'favorites'
+              ? 'bg-[#1C1815] text-[#FAF8F5]'
+              : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+          }`}
+        >
+          <Heart className={`w-3.5 h-3.5 ${activeTab === 'favorites' ? 'fill-rose-400 text-rose-400' : 'text-rose-500'}`} />
+          <span>Saved Favorites ({totalFavoritesCount})</span>
         </button>
 
         <button
@@ -242,6 +269,9 @@ export const CustomerPortal: React.FC = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Automated 2-Hour WhatsApp Reminder Dispatcher */}
+                <WhatsAppReminderCenter booking={booking} />
 
                 {/* Balance Payment Notice */}
                 <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs">
@@ -409,7 +439,313 @@ export const CustomerPortal: React.FC = () => {
         </div>
       )}
 
-      {/* TAB 3: Profile Details */}
+      {/* TAB 3: Saved Favorites */}
+      {activeTab === 'favorites' && (
+        <div className="space-y-6">
+          {/* Sub-filters header */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-4 rounded-2xl border border-stone-200 shadow-2xs">
+            <div>
+              <h2 className="font-serif-luxury text-lg font-bold text-stone-900 flex items-center gap-2">
+                <Heart className="w-5 h-5 fill-rose-500 text-rose-500" />
+                <span>Your Bookmarked Favorites</span>
+              </h2>
+              <p className="text-xs text-stone-500 mt-0.5">
+                Quick 1-click access to schedule appointments with your preferred salons and beauticians.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <button
+                onClick={() => setFavoritesFilter('all')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                  favoritesFilter === 'all'
+                    ? 'bg-[#1C1815] text-[#FAF8F5]'
+                    : 'text-stone-600 hover:bg-stone-100'
+                }`}
+              >
+                All ({totalFavoritesCount})
+              </button>
+              <button
+                onClick={() => setFavoritesFilter('parlours')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                  favoritesFilter === 'parlours'
+                    ? 'bg-[#1C1815] text-[#FAF8F5]'
+                    : 'text-stone-600 hover:bg-stone-100'
+                }`}
+              >
+                Salons ({favoriteParloursList.length})
+              </button>
+              <button
+                onClick={() => setFavoritesFilter('staff')}
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors ${
+                  favoritesFilter === 'staff'
+                    ? 'bg-[#1C1815] text-[#FAF8F5]'
+                    : 'text-stone-600 hover:bg-stone-100'
+                }`}
+              >
+                Beauticians ({favoriteStaffList.length})
+              </button>
+            </div>
+          </div>
+
+          {/* Empty state when zero favorites */}
+          {totalFavoritesCount === 0 ? (
+            <div className="bg-white rounded-3xl p-12 text-center border border-stone-200 space-y-4 shadow-xs">
+              <div className="w-14 h-14 mx-auto rounded-full bg-rose-50 border border-rose-100 flex items-center justify-center">
+                <Heart className="w-7 h-7 text-rose-400 stroke-[1.75]" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="font-serif-luxury text-xl font-bold text-stone-900">
+                  No saved salons or stylists yet
+                </h3>
+                <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
+                  Click the heart icon on any parlour card or beautician profile to bookmark them here. You can then quickly compare, book with 25% advance, or check their live availability.
+                </p>
+              </div>
+              <button
+                onClick={() => setCurrentView('showcase')}
+                className="mt-2 px-5 py-2.5 bg-[#1C1815] text-[#FAF8F5] text-xs font-semibold rounded-xl hover:bg-stone-800 transition-all shadow-sm"
+              >
+                Explore Salons &amp; Stylists
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-8">
+              {/* SECTION: Bookmarked Parlours */}
+              {(favoritesFilter === 'all' || favoritesFilter === 'parlours') && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-stone-200/80 pb-2">
+                    <h3 className="font-serif-luxury text-base font-bold text-stone-900 flex items-center gap-2">
+                      <span>Saved Salons &amp; Parlours</span>
+                      <span className="text-xs font-sans font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
+                        {favoriteParloursList.length}
+                      </span>
+                    </h3>
+                    {favoriteParloursList.length === 0 && (
+                      <span className="text-xs text-stone-400 italic">No salons in this category</span>
+                    )}
+                  </div>
+
+                  {favoriteParloursList.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {favoriteParloursList.map((parlour) => (
+                        <div
+                          key={parlour.id}
+                          className="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                        >
+                          <div>
+                            {/* Parlour Media Banner */}
+                            <div className="relative aspect-16/9 overflow-hidden bg-stone-100">
+                              <img
+                                src={parlour.coverImage}
+                                alt={parlour.name}
+                                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500"
+                              />
+                              <div className="absolute top-3 left-3 bg-[#1C1815]/85 backdrop-blur-xs text-[#FAF8F5] text-[10px] font-medium px-2.5 py-1 rounded-md flex items-center gap-1">
+                                <ShieldCheck className="w-3 h-3 text-amber-300" />
+                                <span>Verified Partner</span>
+                              </div>
+
+                              <div className="absolute top-3 right-3 bg-white/95 backdrop-blur-xs text-stone-900 text-xs font-semibold px-2 py-1 rounded-md shadow-xs flex items-center gap-1">
+                                <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                                <span>{parlour.rating}</span>
+                                <span className="text-stone-400 font-normal">({parlour.reviewCount})</span>
+                              </div>
+                            </div>
+
+                            {/* Details */}
+                            <div className="p-5 space-y-3">
+                              <div>
+                                <h4 className="font-serif-luxury text-lg font-bold text-stone-900 group-hover:text-amber-950 transition-colors">
+                                  {parlour.name}
+                                </h4>
+                                <p className="text-xs text-stone-600 line-clamp-1 mt-0.5">
+                                  {parlour.tagline}
+                                </p>
+                              </div>
+
+                              <div className="space-y-1.5 text-xs text-stone-500">
+                                <div className="flex items-center gap-1.5">
+                                  <MapPin className="w-3.5 h-3.5 text-amber-800 shrink-0" />
+                                  <span className="line-clamp-1">{parlour.address}, {parlour.city}</span>
+                                </div>
+                                <div className="flex items-center gap-1.5">
+                                  <Clock className="w-3.5 h-3.5 text-stone-400 shrink-0" />
+                                  <span>{parlour.openingTime} – {parlour.closingTime} IST</span>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Quick Action Footer */}
+                          <div className="p-4 pt-3 bg-stone-50/70 border-t border-stone-100 flex items-center justify-between gap-2">
+                            <button
+                              onClick={() => {
+                                setSelectedParlourSlug(parlour.slug);
+                                setCurrentView('salon_detail');
+                              }}
+                              className="px-3 py-1.5 text-xs font-semibold text-stone-700 hover:text-stone-900 hover:bg-white rounded-lg transition-colors border border-transparent hover:border-stone-200"
+                            >
+                              View Salon
+                            </button>
+
+                            <div className="flex items-center gap-2">
+                              <button
+                                onClick={() => toggleFavoriteParlour(parlour.id)}
+                                aria-label={`Remove ${parlour.name} from saved favorites`}
+                                title="Remove from favorites"
+                                className="p-2 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200 min-h-9 min-w-9 flex items-center justify-center"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+
+                              <button
+                                onClick={() => openBookingModal(parlour.id)}
+                                className="px-3.5 py-1.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-lg text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5"
+                              >
+                                <Calendar className="w-3.5 h-3.5 text-amber-300" />
+                                <span>Book (25% Advance)</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* SECTION: Bookmarked Beauticians & Stylists */}
+              {(favoritesFilter === 'all' || favoritesFilter === 'staff') && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between border-b border-stone-200/80 pb-2">
+                    <h3 className="font-serif-luxury text-base font-bold text-stone-900 flex items-center gap-2">
+                      <span>Saved Beauticians &amp; Stylists</span>
+                      <span className="text-xs font-sans font-medium px-2 py-0.5 rounded-full bg-stone-100 text-stone-600">
+                        {favoriteStaffList.length}
+                      </span>
+                    </h3>
+                    {favoriteStaffList.length === 0 && (
+                      <span className="text-xs text-stone-400 italic">No stylists in this category</span>
+                    )}
+                  </div>
+
+                  {favoriteStaffList.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {favoriteStaffList.map((member) => {
+                        const memberParlour = parlours.find((p) => p.id === member.parlourId);
+                        return (
+                          <div
+                            key={member.id}
+                            className="bg-white rounded-2xl p-5 border border-stone-200 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                          >
+                            <div className="space-y-4">
+                              <div className="flex items-start gap-4">
+                                <div className="relative shrink-0">
+                                  <img
+                                    src={member.photo}
+                                    alt={member.fullName}
+                                    className="w-16 h-16 rounded-xl object-cover border-2 border-stone-200/80 shadow-2xs"
+                                  />
+                                  {member.isPresentToday && (
+                                    <span
+                                      title="Present in salon today"
+                                      className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white"
+                                    />
+                                  )}
+                                </div>
+
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center gap-2 flex-wrap mb-1">
+                                    <span className="text-[11px] font-semibold text-amber-900 bg-amber-100/70 px-2 py-0.5 rounded">
+                                      {memberParlour?.name || 'Verified Salon'}
+                                    </span>
+                                    {member.isPresentToday && (
+                                      <span className="text-[10px] font-medium text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                                        In Salon Today
+                                      </span>
+                                    )}
+                                  </div>
+
+                                  <h4 className="font-serif-luxury text-base font-bold text-stone-900 truncate">
+                                    {member.fullName}
+                                  </h4>
+                                  <p className="text-xs text-stone-600 font-medium">
+                                    {member.roleTitle}
+                                  </p>
+
+                                  <div className="flex items-center gap-3 text-xs text-stone-500 mt-1">
+                                    <div className="flex items-center gap-1 font-semibold text-stone-800">
+                                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                                      <span>{member.rating}</span>
+                                      <span className="text-stone-400 font-normal">({member.reviewCount})</span>
+                                    </div>
+                                    <span aria-hidden="true" className="text-stone-300">·</span>
+                                    <span>{member.experienceYears} yrs exp</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <p className="text-xs text-stone-600 line-clamp-2 leading-relaxed">
+                                {member.bio}
+                              </p>
+
+                              <div className="flex flex-wrap gap-1">
+                                {member.specializations?.map((spec) => (
+                                  <span
+                                    key={spec}
+                                    className="text-[10px] font-medium text-stone-600 bg-stone-100 px-2 py-0.5 rounded-md"
+                                  >
+                                    {spec}
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Actions */}
+                            <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between gap-2">
+                              <button
+                                onClick={() => {
+                                  setSelectedStaffSlug(member.slug);
+                                  setCurrentView('staff_profile');
+                                }}
+                                className="px-3 py-1.5 text-xs font-semibold text-stone-700 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-colors"
+                              >
+                                View Profile
+                              </button>
+
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => toggleFavoriteStaff(member.id)}
+                                  aria-label={`Remove ${member.fullName} from saved favorites`}
+                                  title="Remove from favorites"
+                                  className="p-2 text-stone-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors border border-transparent hover:border-rose-200 min-h-9 min-w-9 flex items-center justify-center"
+                                >
+                                  <Trash2 className="w-3.5 h-3.5" />
+                                </button>
+
+                                <button
+                                  onClick={() => openBookingModal(member.parlourId, undefined, member.id)}
+                                  className="px-3.5 py-1.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-lg text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5"
+                                >
+                                  <Calendar className="w-3.5 h-3.5 text-amber-300" />
+                                  <span>Book with {member.fullName.split(' ')[0]}</span>
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* TAB 4: Profile Details */}
       {activeTab === 'profile' && (
         <div className="bg-white rounded-2xl p-6 sm:p-8 border border-stone-200 shadow-xs max-w-xl space-y-4">
           <h3 className="font-serif-luxury text-lg font-bold text-stone-900">

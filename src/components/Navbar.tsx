@@ -11,8 +11,10 @@ import {
   Menu,
   X,
   Clock,
+  Heart,
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
+import { addStoredRecentSearch } from '../services/recentSearchesService';
 
 export const Navbar: React.FC = () => {
   const {
@@ -26,6 +28,9 @@ export const Navbar: React.FC = () => {
     setCurrentUserRole,
     customerProfile,
     bookings,
+    favorites,
+    customerPortalActiveTab,
+    setCustomerPortalActiveTab,
     openAuthModal,
     openBookingModal,
   } = useApp();
@@ -46,6 +51,8 @@ export const Navbar: React.FC = () => {
   const upcomingBookingsCount = bookings.filter(
     (b) => b.status === 'confirmed' || b.status === 'advance_paid'
   ).length;
+
+  const totalFavoritesCount = (favorites?.parlourIds?.length || 0) + (favorites?.staffIds?.length || 0);
 
   return (
     <header className="sticky top-0 z-40 bg-[#FAF8F5]/95 backdrop-blur-md border-b border-stone-200/80 transition-all">
@@ -115,6 +122,15 @@ export const Navbar: React.FC = () => {
                   setSearchQuery(e.target.value);
                   if (currentView !== 'showcase') setCurrentView('showcase');
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (searchQuery.trim()) {
+                      addStoredRecentSearch(searchQuery);
+                    }
+                    const el = document.getElementById('parlours-section');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
                 placeholder="Search parlour, facial, bridal makeup, Rica waxing..."
                 className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-stone-200 rounded-full focus:outline-none focus:ring-1 focus:ring-amber-700 focus:border-amber-700 placeholder:text-stone-400 shadow-xs"
               />
@@ -143,10 +159,13 @@ export const Navbar: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setCurrentView('customer_portal')}
-              className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
-                currentView === 'customer_portal'
-                  ? 'text-amber-900 bg-amber-100/60'
+              onClick={() => {
+                setCustomerPortalActiveTab('upcoming');
+                setCurrentView('customer_portal');
+              }}
+              className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+                currentView === 'customer_portal' && customerPortalActiveTab !== 'favorites'
+                  ? 'text-amber-900 bg-amber-100/60 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
@@ -155,6 +174,27 @@ export const Navbar: React.FC = () => {
               {upcomingBookingsCount > 0 && (
                 <span className="w-4 h-4 rounded-full bg-amber-700 text-white text-[10px] flex items-center justify-center font-bold">
                   {upcomingBookingsCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => {
+                setCustomerPortalActiveTab('favorites');
+                setCurrentView('customer_portal');
+              }}
+              className={`relative px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 cursor-pointer ${
+                currentView === 'customer_portal' && customerPortalActiveTab === 'favorites'
+                  ? 'text-rose-900 bg-rose-100/70 font-semibold'
+                  : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+              }`}
+              title="Quick access to bookmarked salons and beauticians in customer portal"
+            >
+              <Heart className={`w-3.5 h-3.5 transition-colors ${totalFavoritesCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-stone-400'}`} />
+              <span>Saved</span>
+              {totalFavoritesCount > 0 && (
+                <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">
+                  {totalFavoritesCount}
                 </span>
               )}
             </button>
@@ -316,6 +356,7 @@ export const Navbar: React.FC = () => {
               </button>
               <button
                 onClick={() => {
+                  setCustomerPortalActiveTab('upcoming');
                   setCurrentView('customer_portal');
                   setIsMobileMenuOpen(false);
                 }}
@@ -325,6 +366,24 @@ export const Navbar: React.FC = () => {
                 {upcomingBookingsCount > 0 && (
                   <span className="w-4 h-4 rounded-full bg-amber-700 text-white text-[10px] flex items-center justify-center font-bold">
                     {upcomingBookingsCount}
+                  </span>
+                )}
+              </button>
+              <button
+                onClick={() => {
+                  setCustomerPortalActiveTab('favorites');
+                  setCurrentView('customer_portal');
+                  setIsMobileMenuOpen(false);
+                }}
+                className="px-3 py-2 text-xs font-medium text-left bg-rose-50/70 border border-rose-200/60 rounded-lg flex items-center justify-between text-stone-900"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Heart className={`w-3.5 h-3.5 ${totalFavoritesCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-stone-400'}`} />
+                  <span>Saved Favorites</span>
+                </div>
+                {totalFavoritesCount > 0 && (
+                  <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">
+                    {totalFavoritesCount}
                   </span>
                 )}
               </button>

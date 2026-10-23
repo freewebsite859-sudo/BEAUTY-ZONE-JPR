@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatINR, calculateCommission } from '../utils/formatters';
+import { WhatsAppReminderCenter } from '../components/WhatsAppReminderCenter';
 
 export const SalonOwnerDashboard: React.FC = () => {
   const {
@@ -313,10 +314,8 @@ export const SalonOwnerDashboard: React.FC = () => {
                   </div>
                 </div>
 
-                <div className="text-xs text-stone-600 bg-stone-50 p-2.5 rounded-lg">
-                  <span className="font-medium">Treatments: </span>
-                  {booking.services.map((s) => s.name).join(', ')}
-                </div>
+                {/* 2-Hour WhatsApp Reminder Dispatch Control */}
+                <WhatsAppReminderCenter booking={booking} compact={true} />
 
                 {/* Counter POS Payment Action */}
                 {booking.status !== 'completed' && (

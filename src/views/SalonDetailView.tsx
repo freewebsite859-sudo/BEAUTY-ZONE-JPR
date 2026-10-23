@@ -15,6 +15,9 @@ import {
 } from 'lucide-react';
 import { useApp } from '../context/AppContext';
 import { formatINR } from '../utils/formatters';
+import { FavoriteButton } from '../components/FavoriteButton';
+import { StaticSalonMap } from '../components/StaticSalonMap';
+import { SalonPhotoGallery } from '../components/SalonPhotoGallery';
 
 export const SalonDetailView: React.FC = () => {
   const {
@@ -28,7 +31,7 @@ export const SalonDetailView: React.FC = () => {
     setCurrentView,
   } = useApp();
 
-  const [activeTab, setActiveTab] = useState<'services' | 'staff' | 'reviews'>('services');
+  const [activeTab, setActiveTab] = useState<'services' | 'gallery' | 'staff' | 'reviews' | 'location'>('services');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [copiedLink, setCopiedLink] = useState(false);
 
@@ -69,21 +72,31 @@ export const SalonDetailView: React.FC = () => {
           <span>Back to all parlours</span>
         </button>
 
-        <button
-          onClick={handleShare}
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-white border border-stone-200 px-3 py-1.5 rounded-lg hover:bg-stone-50 transition-colors"
-        >
-          <Share2 className="w-3.5 h-3.5" />
-          <span>{copiedLink ? 'Link Copied!' : 'Share Parlour'}</span>
-        </button>
+        <div className="flex items-center gap-2">
+          <FavoriteButton
+            type="parlour"
+            id={parlour.id}
+            name={parlour.name}
+            variant="pill"
+            showLabel={true}
+          />
+
+          <button
+            onClick={handleShare}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-stone-700 bg-white border border-stone-200 px-3 py-1.5 rounded-lg hover:bg-stone-50 transition-colors"
+          >
+            <Share2 className="w-3.5 h-3.5" />
+            <span>{copiedLink ? 'Link Copied!' : 'Share Parlour'}</span>
+          </button>
+        </div>
       </div>
 
       {/* Parlour Hero Banner */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-3xl overflow-hidden border border-stone-200 shadow-sm">
-          {/* Photo Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-stone-100">
-            <div className="md:col-span-2 aspect-16/10 rounded-2xl overflow-hidden">
+          {/* Photo Gallery Grid with Lookbook trigger */}
+          <div className="relative grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-stone-100 group">
+            <div className="md:col-span-2 aspect-16/10 rounded-2xl overflow-hidden relative">
               <img
                 src={parlour.coverImage}
                 alt={parlour.name}
@@ -91,14 +104,14 @@ export const SalonDetailView: React.FC = () => {
               />
             </div>
             <div className="grid grid-rows-2 gap-2 hidden md:grid">
-              <div className="aspect-16/10 rounded-2xl overflow-hidden">
+              <div className="aspect-16/10 rounded-2xl overflow-hidden relative">
                 <img
                   src={parlour.images?.[0] || parlour.coverImage}
                   alt={parlour.name}
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="aspect-16/10 rounded-2xl overflow-hidden">
+              <div className="aspect-16/10 rounded-2xl overflow-hidden relative">
                 <img
                   src={parlour.images?.[1] || parlour.coverImage}
                   alt={parlour.name}
@@ -106,6 +119,15 @@ export const SalonDetailView: React.FC = () => {
                 />
               </div>
             </div>
+
+            {/* Quick action button to launch category-filtered photo gallery */}
+            <button
+              onClick={() => setActiveTab('gallery')}
+              className="absolute bottom-4 right-4 bg-[#1C1815]/90 hover:bg-[#1C1815] backdrop-blur-xs text-[#FAF8F5] px-3.5 py-2 rounded-xl text-xs font-semibold shadow-lg transition-all flex items-center gap-1.5 cursor-pointer border border-stone-700/80"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+              <span>Browse Photo Gallery &amp; Categories</span>
+            </button>
           </div>
 
           {/* Header Info */}
@@ -174,7 +196,7 @@ export const SalonDetailView: React.FC = () => {
 
                 <button
                   onClick={() => openBookingModal(parlour.id)}
-                  className="w-full py-2.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-xl text-xs font-semibold transition-all shadow-sm flex items-center justify-center gap-2"
+                  className="w-full py-2.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-xl text-xs font-semibold transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
                 >
                   <Calendar className="w-3.5 h-3.5 text-amber-300" />
                   <span>Book Appointment Now</span>
@@ -183,10 +205,10 @@ export const SalonDetailView: React.FC = () => {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="border-t border-stone-200 pt-4 flex items-center gap-2">
+            <div className="border-t border-stone-200 pt-4 flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
               <button
                 onClick={() => setActiveTab('services')}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors ${
+                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'services'
                     ? 'bg-[#1C1815] text-[#FAF8F5]'
                     : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
@@ -195,8 +217,19 @@ export const SalonDetailView: React.FC = () => {
                 Services &amp; Rate Card ({parlourServices.length})
               </button>
               <button
+                onClick={() => setActiveTab('gallery')}
+                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  activeTab === 'gallery'
+                    ? 'bg-[#1C1815] text-[#FAF8F5]'
+                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                }`}
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+                <span>Photo Gallery &amp; Categories</span>
+              </button>
+              <button
                 onClick={() => setActiveTab('staff')}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors ${
+                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'staff'
                     ? 'bg-[#1C1815] text-[#FAF8F5]'
                     : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
@@ -206,13 +239,24 @@ export const SalonDetailView: React.FC = () => {
               </button>
               <button
                 onClick={() => setActiveTab('reviews')}
-                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors ${
+                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap cursor-pointer ${
                   activeTab === 'reviews'
                     ? 'bg-[#1C1815] text-[#FAF8F5]'
                     : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
                 }`}
               >
                 Client Reviews ({parlourReviews.length})
+              </button>
+              <button
+                onClick={() => setActiveTab('location')}
+                className={`px-4 py-2 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
+                  activeTab === 'location'
+                    ? 'bg-[#1C1815] text-[#FAF8F5]'
+                    : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                }`}
+              >
+                <MapPin className="w-3.5 h-3.5 text-amber-600" />
+                <span>Location &amp; Map</span>
               </button>
             </div>
           </div>
@@ -295,10 +339,40 @@ export const SalonDetailView: React.FC = () => {
                 </div>
               ))}
             </div>
+
+            {/* Salon Physical Location & Static Map Preview */}
+            <div className="pt-8 border-t border-stone-200/90 space-y-4">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <h3 className="font-serif-luxury text-xl font-bold text-stone-900 flex items-center gap-2">
+                    <MapPin className="w-5 h-5 text-amber-800" />
+                    <span>Physical Salon Location &amp; Premises</span>
+                  </h3>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    Navigate to {parlour.name} on the map before your appointment
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => setActiveTab('location')}
+                  className="text-xs font-semibold text-amber-900 hover:text-amber-950 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Explore Directions &amp; Transit</span>
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <StaticSalonMap parlour={parlour} height="h-72 sm:h-84" />
+            </div>
           </div>
         )}
 
-        {/* TAB 2: Staff / Beauticians */}
+        {/* TAB 2: Photo Gallery & Categories */}
+        {activeTab === 'gallery' && (
+          <SalonPhotoGallery parlour={parlour} />
+        )}
+
+        {/* TAB 3: Staff / Beauticians */}
         {activeTab === 'staff' && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {parlourStaff.map((member) => (
@@ -306,25 +380,33 @@ export const SalonDetailView: React.FC = () => {
                 key={member.id}
                 className="bg-white rounded-2xl p-6 border border-stone-200 shadow-xs space-y-4"
               >
-                <div className="flex items-center gap-4">
-                  <img
-                    src={member.photo}
-                    alt={member.fullName}
-                    className="w-16 h-16 rounded-full object-cover border-2 border-stone-200"
-                  />
-                  <div>
-                    <h3 className="font-serif-luxury text-base font-bold text-stone-900">
-                      {member.fullName}
-                    </h3>
-                    <p className="text-xs text-amber-900 font-medium">
-                      {member.roleTitle}
-                    </p>
-                    <div className="flex items-center gap-1 text-xs text-stone-500 mt-1">
-                      <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
-                      <span className="font-semibold text-stone-800">{member.rating}</span>
-                      <span>({member.experienceYears} yrs experience)</span>
+                <div className="flex items-start justify-between gap-3">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={member.photo}
+                      alt={member.fullName}
+                      className="w-16 h-16 rounded-full object-cover border-2 border-stone-200"
+                    />
+                    <div>
+                      <h3 className="font-serif-luxury text-base font-bold text-stone-900">
+                        {member.fullName}
+                      </h3>
+                      <p className="text-xs text-amber-900 font-medium">
+                        {member.roleTitle}
+                      </p>
+                      <div className="flex items-center gap-1 text-xs text-stone-500 mt-1">
+                        <Star className="w-3.5 h-3.5 fill-amber-500 text-amber-500" />
+                        <span className="font-semibold text-stone-800">{member.rating}</span>
+                        <span>({member.experienceYears} yrs experience)</span>
+                      </div>
                     </div>
                   </div>
+                  <FavoriteButton
+                    type="staff"
+                    id={member.id}
+                    name={member.fullName}
+                    size="sm"
+                  />
                 </div>
 
                 <p className="text-xs text-stone-600 leading-relaxed">
@@ -427,6 +509,105 @@ export const SalonDetailView: React.FC = () => {
                 )}
               </div>
             ))}
+          </div>
+        )}
+
+        {/* TAB 4: Physical Location & Static Google Maps */}
+        {activeTab === 'location' && (
+          <div className="space-y-8">
+            {/* Location Header Overview */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-3xl border border-stone-200 shadow-xs">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-900 bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 rounded-full w-fit mb-2">
+                  <MapPin className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Physical Salon Location &amp; Directions</span>
+                </div>
+                <h2 className="font-serif-luxury text-2xl sm:text-3xl font-bold text-stone-900">
+                  Find &amp; Visit {parlour.name}
+                </h2>
+                <p className="text-xs text-stone-500 mt-1 max-w-xl">
+                  Centrally located in {parlour.area}, {parlour.city}. Easy connectivity via metro, auto, and reserved client valet parking.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <a
+                  href={`tel:${parlour.phone}`}
+                  className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-xl text-xs font-semibold transition-colors flex items-center gap-2 min-h-11 shadow-2xs"
+                >
+                  <Phone className="w-3.5 h-3.5 text-stone-600" />
+                  <span>Call Reception</span>
+                </a>
+
+                <button
+                  onClick={() => openBookingModal(parlour.id)}
+                  className="px-4 py-2 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-xl text-xs font-semibold transition-all shadow-xs flex items-center gap-2 min-h-11"
+                >
+                  <Calendar className="w-3.5 h-3.5 text-amber-300" />
+                  <span>Book Appointment</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Static Google Maps Replica Component */}
+            <StaticSalonMap parlour={parlour} height="h-96 sm:h-[420px]" />
+
+            {/* Location Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs">
+              {/* Card 1: Full Address & Landmarks */}
+              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 text-stone-900 font-bold">
+                  <MapPin className="w-4 h-4 text-amber-800" />
+                  <h3 className="text-sm">Postal Address</h3>
+                </div>
+                <p className="text-stone-700 leading-relaxed">
+                  {parlour.name}<br />
+                  {parlour.address}<br />
+                  {parlour.area}, {parlour.city} - {parlour.pincode}<br />
+                  {parlour.state}, India
+                </p>
+                <div className="pt-2 border-t border-stone-100 text-[11px] text-stone-500">
+                  <span className="font-semibold text-stone-800">GST Registration: </span>
+                  <span className="font-mono">{parlour.gstin || '27AABCU9603R1ZM'}</span>
+                </div>
+              </div>
+
+              {/* Card 2: Operating Hours */}
+              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 text-stone-900 font-bold">
+                  <Clock className="w-4 h-4 text-amber-800" />
+                  <h3 className="text-sm">Business Timings</h3>
+                </div>
+                <div className="space-y-1.5 text-stone-600">
+                  <div className="flex justify-between py-1 border-b border-stone-100">
+                    <span>Monday – Saturday:</span>
+                    <span className="font-medium text-stone-900">{parlour.openingTime} – {parlour.closingTime} IST</span>
+                  </div>
+                  <div className="flex justify-between py-1 border-b border-stone-100">
+                    <span>Sunday:</span>
+                    <span className="font-medium text-stone-900">{parlour.openingTime} – 07:00 PM IST</span>
+                  </div>
+                  <div className="flex justify-between py-1">
+                    <span>Bridal Sessions:</span>
+                    <span className="font-medium text-emerald-800">Early slots by prior booking</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Arrival & Booking Economics */}
+              <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-xs space-y-3">
+                <div className="flex items-center gap-2 text-stone-900 font-bold">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <h3 className="text-sm">Arrival &amp; Advance Policy</h3>
+                </div>
+                <p className="text-stone-600 leading-relaxed">
+                  Lock your slot with a <strong>25% online advance</strong>. The remaining 75% balance is settled at the parlour after your styling or treatment is complete.
+                </p>
+                <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 font-medium">
+                  ✓ Free cancellation up to 24 hours prior to appointment time.
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </section>

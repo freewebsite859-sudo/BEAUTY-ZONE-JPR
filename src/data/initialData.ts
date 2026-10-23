@@ -187,6 +187,40 @@ export const initialParlours: Parlour[] = [
     serviceCategories: ['Facial & Skin', 'Hair Care', 'Spa & Massage'],
     createdAt: '2026-10-18T14:30:00Z',
   },
+  {
+    id: 'parlour-6',
+    slug: 'royal-heritage-bridal-beauty-jaipur',
+    name: 'Royal Heritage Bridal & Beauty Parlour',
+    tagline: 'Royal Rajasthani bridal makeover, Kesar Ubtan facial & Marwari Mehendi in Jaipur',
+    description: 'Jaipur premier heritage beauty salon offering authentic Kesar Haldi Ubtan pre-bridal care, Kundan makeup trials, and organic hair spa treatment in C Scheme.',
+    address: 'Plot 12, MI Road, Near Panch Batti, C Scheme',
+    area: 'C Scheme',
+    city: 'Jaipur',
+    state: 'Rajasthan',
+    pincode: '302001',
+    phone: '+91 141 237 8890',
+    whatsappNumber: '+91 98290 55667',
+    gstin: '08AAACR1234K1Z2',
+    coverImage: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1200&q=80',
+    images: ['https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80'],
+    rating: 4.9,
+    reviewCount: 215,
+    openingTime: '09:30 AM',
+    closingTime: '08:30 PM',
+    status: 'published',
+    ownerId: 'owner-6',
+    ownerName: 'Gayatri Rathore',
+    advancePercent: 25,
+    commissionBps: 1000,
+    bankDetails: {
+      accountHolder: 'Royal Heritage Beauty Studio',
+      accountNumber: '781000998822',
+      ifscCode: 'BARB0MIROAD',
+      upiId: 'royalheritage@bob',
+    },
+    serviceCategories: ['Bridal & Groom', 'Facial & Skin', 'Mehendi & Henna', 'Hair Care', 'Waxing & Threading'],
+    createdAt: '2024-04-01T10:00:00Z',
+  },
 ];
 
 export const initialServices: SalonService[] = [
@@ -328,6 +362,96 @@ export const initialServices: SalonService[] = [
     pricePaise: 349900, // ₹3,499
     isActive: true,
     popular: true,
+  },
+  // Services for Nazneen Nizam Bridal Studio (parlour-4)
+  {
+    id: 'srv-401',
+    parlourId: 'parlour-4',
+    name: 'Nawabi Bridal Glow Facial',
+    category: 'Facial & Skin',
+    description: 'Nizami heritage saffron & rose water infusion with jade roller lymphatic drainage.',
+    durationMinutes: 60,
+    pricePaise: 220000, // ₹2,200
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-402',
+    parlourId: 'parlour-4',
+    name: 'Arabic Bridal Mehendi & Palm Design',
+    category: 'Mehendi & Henna',
+    description: 'Fine-line organic henna detailing with clove oil darkening therapy.',
+    durationMinutes: 120,
+    pricePaise: 450000, // ₹4,500
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-403',
+    parlourId: 'parlour-4',
+    name: 'Hyderabadi Royal Nizami Bridal Makeover',
+    category: 'Bridal & Groom',
+    description: 'Long-wear waterproof bridal makeup, khada dupatta draping, and traditional hair styling.',
+    durationMinutes: 180,
+    pricePaise: 1650000, // ₹16,500
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-404',
+    parlourId: 'parlour-4',
+    name: 'Herbal Gold Bleach & Glow Pack',
+    category: 'Bleach & De-Tan',
+    description: 'Ammonia-free herbal saffron bleach with cooling sandalwood finish.',
+    durationMinutes: 30,
+    pricePaise: 49900, // ₹499
+    isActive: true,
+    popular: false,
+  },
+  // Services for Royal Heritage Bridal & Beauty Parlour (parlour-6 - Jaipur)
+  {
+    id: 'srv-601',
+    parlourId: 'parlour-6',
+    name: 'Royal Kesar Ubtan & Haldi Pre-Bridal Glow Facial',
+    category: 'Facial & Skin',
+    description: 'Heritage Rajasthani saffron, raw turmeric & sandalwood milk bath infusion for bridal luminosity.',
+    durationMinutes: 75,
+    pricePaise: 279900, // ₹2,799
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-602',
+    parlourId: 'parlour-6',
+    name: 'Marwari Kundan Bridal Makeup & Dupatta Draping',
+    category: 'Bridal & Groom',
+    description: 'HD waterproof bridal transformation, royal borla setting, Kundan jewellery placement & odhna draping.',
+    durationMinutes: 180,
+    pricePaise: 1950000, // ₹19,500
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-603',
+    parlourId: 'parlour-6',
+    name: 'Rajasthani Marwari Bridal Mehendi',
+    category: 'Mehendi & Henna',
+    description: 'Full-arm Sojat organic henna artwork featuring bridal doli and baraat motifs.',
+    durationMinutes: 150,
+    pricePaise: 550000, // ₹5,500
+    isActive: true,
+    popular: true,
+  },
+  {
+    id: 'srv-604',
+    parlourId: 'parlour-6',
+    name: 'Herbal Organic Honey Waxing & Threading',
+    category: 'Waxing & Threading',
+    description: 'Full arms & full legs organic sugar honey waxing with aloe vera soothing massage.',
+    durationMinutes: 45,
+    pricePaise: 89900, // ₹899
+    isActive: true,
+    popular: false,
   },
 ];
 

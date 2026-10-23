@@ -12,6 +12,7 @@ import {
   PayoutRecord,
   PlatformSettings,
   ParlourStatus,
+  FavoritesState,
 } from '../types';
 import {
   initialPlatformSettings,
@@ -29,6 +30,8 @@ interface AppContextType {
   // Navigation & Routing state
   currentView: 'showcase' | 'salon_detail' | 'staff_profile' | 'customer_portal' | 'owner_dashboard' | 'super_admin';
   setCurrentView: (view: 'showcase' | 'salon_detail' | 'staff_profile' | 'customer_portal' | 'owner_dashboard' | 'super_admin') => void;
+  customerPortalActiveTab: 'upcoming' | 'past' | 'favorites' | 'profile';
+  setCustomerPortalActiveTab: (tab: 'upcoming' | 'past' | 'favorites' | 'profile') => void;
   selectedParlourSlug: string | null;
   setSelectedParlourSlug: (slug: string | null) => void;
   selectedStaffSlug: string | null;
@@ -71,6 +74,13 @@ interface AppContextType {
   closeAuthModal: () => void;
   authModalDefaultTab: 'customer_signup' | 'owner_signup' | 'login';
 
+  // Favorites / Bookmarks
+  favorites: FavoritesState;
+  toggleFavoriteParlour: (parlourId: string) => void;
+  toggleFavoriteStaff: (staffId: string) => void;
+  isFavoriteParlour: (parlourId: string) => boolean;
+  isFavoriteStaff: (staffId: string) => boolean;
+
   // Actions
   registerCustomer: (data: { fullName: string; email: string; dob: string; whatsappNumber: string }) => boolean;
   registerOwnerAndParlour: (ownerData: { fullName: string; email: string; whatsappNumber: string }, parlourData: Partial<Parlour>) => void;
@@ -85,6 +95,7 @@ interface AppContextType {
   triggerDaily10PMPayout: () => PayoutRecord[];
   updatePlatformSettings: (settings: Partial<PlatformSettings>) => void;
 }
+
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
@@ -113,6 +124,7 @@ function setSafeStorage(key: string, value: unknown): void {
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Navigation
   const [currentView, setCurrentView] = useState<'showcase' | 'salon_detail' | 'staff_profile' | 'customer_portal' | 'owner_dashboard' | 'super_admin'>('showcase');
+  const [customerPortalActiveTab, setCustomerPortalActiveTab] = useState<'upcoming' | 'past' | 'favorites' | 'profile'>('upcoming');
   const [selectedParlourSlug, setSelectedParlourSlug] = useState<string | null>('aura-luxury-salon-bandra');
   const [selectedStaffSlug, setSelectedStaffSlug] = useState<string | null>(null);
 
@@ -171,6 +183,41 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   const [platformSettings, setPlatformSettings] = useState<PlatformSettings>(() => {
     return getSafeStorage('bz_settings', initialPlatformSettings);
   });
+
+  // Favorites / Bookmarks state with persistence
+  const [favorites, setFavorites] = useState<FavoritesState>(() => {
+    return getSafeStorage<FavoritesState>('bz_favorites', {
+      parlourIds: ['parlour-1'],
+      staffIds: ['staff-1'],
+    });
+  });
+
+  useEffect(() => {
+    setSafeStorage('bz_favorites', favorites);
+  }, [favorites]);
+
+  const toggleFavoriteParlour = (parlourId: string) => {
+    setFavorites((prev) => {
+      const exists = prev.parlourIds.includes(parlourId);
+      const updatedParlours = exists
+        ? prev.parlourIds.filter((id) => id !== parlourId)
+        : [...prev.parlourIds, parlourId];
+      return { ...prev, parlourIds: updatedParlours };
+    });
+  };
+
+  const toggleFavoriteStaff = (staffId: string) => {
+    setFavorites((prev) => {
+      const exists = prev.staffIds.includes(staffId);
+      const updatedStaff = exists
+        ? prev.staffIds.filter((id) => id !== staffId)
+        : [...prev.staffIds, staffId];
+      return { ...prev, staffIds: updatedStaff };
+    });
+  };
+
+  const isFavoriteParlour = (parlourId: string) => favorites.parlourIds.includes(parlourId);
+  const isFavoriteStaff = (staffId: string) => favorites.staffIds.includes(staffId);
 
   // Modals
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
@@ -441,6 +488,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       value={{
         currentView,
         setCurrentView,
+        customerPortalActiveTab,
+        setCustomerPortalActiveTab,
         selectedParlourSlug,
         setSelectedParlourSlug,
         selectedStaffSlug,
@@ -473,6 +522,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         openAuthModal,
         closeAuthModal,
         authModalDefaultTab,
+        favorites,
+        toggleFavoriteParlour,
+        toggleFavoriteStaff,
+        isFavoriteParlour,
+        isFavoriteStaff,
         registerCustomer,
         registerOwnerAndParlour,
         createBooking,

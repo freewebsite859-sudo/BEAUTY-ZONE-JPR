@@ -177,9 +177,15 @@ export interface PayoutRecord {
   bankOrUpi: string;
 }
 
+export interface FavoritesState {
+  parlourIds: string[];
+  staffIds: string[];
+}
+
 export interface PlatformSettings {
   advance_percent: number; // 25
   commission_bps: number; // 1000 = 10%
   daily_payout_time: string; // '10:00 PM IST'
   min_customer_age: number; // 16
 }
+
