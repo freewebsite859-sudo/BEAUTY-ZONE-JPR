@@ -16,18 +16,18 @@ export const PromotionalBanner: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5" />
           </span>
           <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-amber-200">Festive Glow & Bridal Season</span>
+            <span className="font-medium text-amber-200">Festive &amp; Bridal Season Offers</span>
             <span className="text-stone-500 hidden md:inline">·</span>
             <span className="text-stone-300 hidden md:inline">
-              Flat 15% off at verified parlours across Mumbai, Delhi & Bengaluru
+              Flat 15% off at verified beauty parlours in top Indian cities
             </span>
             <span className="text-stone-500 hidden sm:inline">·</span>
             <span className="bg-amber-400/10 text-amber-300 font-mono text-xs px-2 py-0.5 rounded border border-amber-400/30">
-              UTSAV25
+              Code: UTSAV25
             </span>
             <span className="text-stone-500 hidden lg:inline">·</span>
             <span className="text-stone-400 text-xs hidden lg:inline-flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> 25% Advance Protection
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Booking Deposit Protection
             </span>
           </div>
         </div>

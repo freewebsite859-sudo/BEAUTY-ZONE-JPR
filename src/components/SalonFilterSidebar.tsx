@@ -654,7 +654,7 @@ export const SalonFilterSidebar: React.FC<SalonFilterSidebarProps> = ({
           <span>Aura Platform Guarantee</span>
         </div>
         <p className="text-[10px] text-stone-500 leading-relaxed">
-          All listed parlours accept a locked 25% advance. Remaining 75% balance is paid directly at the salon after service delivery.
+          All listed parlours accept a small booking deposit. The remaining balance is paid directly at the salon after service delivery.
         </p>
       </div>
     </div>

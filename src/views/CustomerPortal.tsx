@@ -118,7 +118,7 @@ export const CustomerPortal: React.FC = () => {
             Welcome, {customerProfile?.fullName || 'Valued Guest'}
           </h1>
           <p className="text-xs text-stone-500 mt-1">
-            Manage your parlour appointments, track 25% advances, and download WhatsApp slips.
+            Manage your parlour appointments, track booking deposits, and download WhatsApp slips.
           </p>
         </div>
 
@@ -193,7 +193,7 @@ export const CustomerPortal: React.FC = () => {
                 No upcoming parlour visits
               </h3>
               <p className="text-xs text-stone-500 max-w-sm mx-auto">
-                Ready for a glow facial or bridal styling? Browse verified parlours and lock your slot with 25% advance.
+                Ready for a glow facial or bridal styling? Browse verified parlours and lock your slot with a small booking deposit.
               </p>
               <button
                 onClick={() => setCurrentView('showcase')}
@@ -216,7 +216,7 @@ export const CustomerPortal: React.FC = () => {
                       </span>
                       <span className="text-xs font-medium text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full flex items-center gap-1">
                         <CheckCircle className="w-3 h-3 text-emerald-600" />
-                        25% Advance Paid · Confirmed
+                        Booking Deposit Paid · Confirmed
                       </span>
                     </div>
                     <h3 className="font-serif-luxury text-lg font-bold text-stone-900">
@@ -280,7 +280,7 @@ export const CustomerPortal: React.FC = () => {
                       Pay at Salon: {formatINR(booking.balancePaise)}
                     </span>
                     <span className="text-stone-600 text-[11px]">
-                      (25% advance of {formatINR(booking.advancePaise)} was paid online)
+                      (Booking deposit of {formatINR(booking.advancePaise)} was paid online)
                     </span>
                   </div>
 
@@ -499,7 +499,7 @@ export const CustomerPortal: React.FC = () => {
                   No saved salons or stylists yet
                 </h3>
                 <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
-                  Click the heart icon on any parlour card or beautician profile to bookmark them here. You can then quickly compare, book with 25% advance, or check their live availability.
+                  Click the heart icon on any parlour card or beautician profile to bookmark them here. You can then quickly compare, book with an online deposit, or check their live availability.
                 </p>
               </div>
               <button
@@ -604,7 +604,7 @@ export const CustomerPortal: React.FC = () => {
                                 className="px-3.5 py-1.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 rounded-lg text-xs font-semibold shadow-2xs transition-all flex items-center gap-1.5"
                               >
                                 <Calendar className="w-3.5 h-3.5 text-amber-300" />
-                                <span>Book (25% Advance)</span>
+                                <span>Book Appointment</span>
                               </button>
                             </div>
                           </div>

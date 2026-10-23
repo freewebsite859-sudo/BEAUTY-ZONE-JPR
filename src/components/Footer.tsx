@@ -15,9 +15,9 @@ export const Footer: React.FC = () => {
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-semibold text-stone-100">25% Advance Escrow Protection</h4>
+              <h4 className="text-sm font-semibold text-stone-100">Booking Deposit Escrow Protection</h4>
               <p className="text-xs text-stone-400 mt-1 leading-relaxed">
-                Pay only 25% advance online to lock your slot. The 75% balance is paid directly at the parlour counter after your service.
+                Pay a small booking deposit online to lock your slot. The remaining balance is paid directly at the parlour counter after your service.
               </p>
             </div>
           </div>
@@ -155,6 +155,17 @@ export const Footer: React.FC = () => {
                   Parlours in Pune
                 </button>
               </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setSelectedCity('Jaipur');
+                    setCurrentView('showcase');
+                  }}
+                  className="hover:text-amber-300 transition-colors"
+                >
+                  Parlours in Jaipur
+                </button>
+              </li>
             </ul>
           </div>
 
@@ -201,7 +212,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-4 text-[11px]">
             <span>GST Compliant Invoicing</span>
             <span aria-hidden="true">·</span>
-            <span>25% Advance Escrow</span>
+            <span>Booking Deposit Escrow</span>
             <span aria-hidden="true">·</span>
             <span>Indian English Standard</span>
             <span aria-hidden="true">·</span>

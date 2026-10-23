@@ -89,7 +89,7 @@ export const SalonOwnerDashboard: React.FC = () => {
       `✨ Hydra-Glow Radiance Facial & De-Tan: Flat 15% off\n` +
       `💅 Rica White Chocolate Waxing + Threading Combo\n` +
       `💍 Luxury HD Bridal Makeup Trials available\n\n` +
-      `Book online with just a *25% advance* to lock your preferred slot!\n` +
+      `Book online with a *booking deposit* to lock your preferred slot!\n` +
       `📞 WhatsApp us or book directly on BeautyZone.`;
     setGeneratedPromo(promo);
   };
@@ -246,7 +246,7 @@ export const SalonOwnerDashboard: React.FC = () => {
               Appointments &amp; Salon Counter POS
             </h2>
             <span className="text-xs text-stone-500">
-              Collect 75% balance payments in cash or counter UPI
+              Collect balance payments in cash or counter UPI
             </span>
           </div>
 
@@ -279,7 +279,7 @@ export const SalonOwnerDashboard: React.FC = () => {
                     >
                       {booking.status === 'completed'
                         ? 'Completed · Balance Paid'
-                        : 'Slot Confirmed · 25% Advance Locked'}
+                        : 'Slot Confirmed · Booking Deposit Paid'}
                     </span>
                   </div>
                 </div>
@@ -300,7 +300,7 @@ export const SalonOwnerDashboard: React.FC = () => {
                   </div>
 
                   <div>
-                    <span className="text-stone-400 block text-[10px]">25% Online Advance</span>
+                    <span className="text-stone-400 block text-[10px]">Booking Deposit Paid</span>
                     <span className="font-mono font-semibold text-emerald-700">
                       {formatINR(booking.advancePaise)}
                     </span>

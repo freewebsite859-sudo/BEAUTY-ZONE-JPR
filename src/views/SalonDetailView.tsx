@@ -185,12 +185,12 @@ export const SalonDetailView: React.FC = () => {
 
                 <div className="text-xs text-stone-600 space-y-1">
                   <div className="flex items-center justify-between">
-                    <span>Advance to book:</span>
-                    <span className="font-bold text-amber-900 font-mono">25% Online</span>
+                    <span>Booking Deposit:</span>
+                    <span className="font-bold text-amber-900 font-mono">Deposit Online</span>
                   </div>
                   <div className="flex items-center justify-between text-stone-500">
                     <span>Balance payment:</span>
-                    <span>75% at Salon</span>
+                    <span>Pay at Salon</span>
                   </div>
                 </div>
 
@@ -315,7 +315,7 @@ export const SalonDetailView: React.FC = () => {
                           {formatINR(service.pricePaise)}
                         </span>
                         <p className="text-[10px] text-emerald-700 font-medium">
-                          25% advance: {formatINR(Math.ceil(service.pricePaise * 0.25))}
+                          Booking Deposit: {formatINR(Math.ceil(service.pricePaise * 0.25))}
                         </p>
                       </div>
                     </div>
@@ -601,7 +601,7 @@ export const SalonDetailView: React.FC = () => {
                   <h3 className="text-sm">Arrival &amp; Advance Policy</h3>
                 </div>
                 <p className="text-stone-600 leading-relaxed">
-                  Lock your slot with a <strong>25% online advance</strong>. The remaining 75% balance is settled at the parlour after your styling or treatment is complete.
+                  Lock your slot with a <strong>small online booking deposit</strong>. The remaining balance is settled at the parlour after your styling or treatment is complete.
                 </p>
                 <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200 text-[11px] text-emerald-900 font-medium">
                   ✓ Free cancellation up to 24 hours prior to appointment time.

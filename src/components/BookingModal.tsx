@@ -270,7 +270,7 @@ export const BookingModal: React.FC = () => {
             <p className="text-xs text-stone-300 mt-0.5">
               {step === 5
                 ? 'Booking Confirmed'
-                : `Step ${step} of 4 · 25% Advance Lock`}
+                : `Step ${step} of 4 · Booking Deposit Lock`}
             </p>
           </div>
           <button
@@ -318,7 +318,7 @@ export const BookingModal: React.FC = () => {
                   step === 4 ? 'text-amber-800 font-semibold' : ''
                 }`}
               >
-                <span>4. 25% Advance</span>
+                <span>4. Booking Deposit</span>
               </button>
             </div>
           </div>
@@ -387,7 +387,7 @@ export const BookingModal: React.FC = () => {
                             {formatINR(service.pricePaise)}
                           </span>
                           <p className="text-[10px] text-emerald-700 font-medium">
-                            25% advance: {formatINR(Math.ceil(service.pricePaise * 0.25))}
+                            Booking Deposit: {formatINR(Math.ceil(service.pricePaise * 0.25))}
                           </p>
                         </div>
                       </div>
@@ -597,7 +597,7 @@ export const BookingModal: React.FC = () => {
                 <div className="flex items-center justify-between text-xs text-amber-900 bg-amber-100/70 p-2.5 rounded-lg font-medium">
                   <div className="flex items-center gap-1.5">
                     <ShieldCheck className="w-4 h-4 text-amber-800" />
-                    <span>25% Advance Required to Lock Slot:</span>
+                    <span>Booking Deposit Required to Lock Slot:</span>
                   </div>
                   <span className="font-bold text-sm text-amber-950 font-mono">
                     {formatINR(advancePaise)}
@@ -605,7 +605,7 @@ export const BookingModal: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between text-xs text-stone-600 pt-1">
-                  <span>Remaining 75% Balance (Pay at Salon):</span>
+                  <span>Remaining Balance (Pay at Salon):</span>
                   <span className="font-semibold text-stone-800 font-mono">
                     {formatINR(balancePaise)}
                   </span>
@@ -618,7 +618,7 @@ export const BookingModal: React.FC = () => {
               {/* Payment Method Selector */}
               <div>
                 <label className="block text-xs font-semibold text-stone-800 mb-2">
-                  Select Advance Payment Mode ({formatINR(advancePaise)})
+                  Select Deposit Payment Mode ({formatINR(advancePaise)})
                 </label>
                 <div className="grid grid-cols-3 gap-2">
                   <button
@@ -701,7 +701,7 @@ export const BookingModal: React.FC = () => {
 
               <div className="space-y-1">
                 <span className="text-xs font-semibold text-emerald-800 uppercase tracking-wider">
-                  Payment Successful · 25% Advance Paid
+                  Payment Successful · Booking Deposit Paid
                 </span>
                 <h3 className="font-serif-luxury text-2xl font-bold text-stone-900">
                   Appointment Confirmed!
@@ -738,13 +738,13 @@ export const BookingModal: React.FC = () => {
                     </span>
                   </div>
                   <div>
-                    <span className="text-stone-400 block text-[10px]">Customer WhatsApp</span>
+                    <span className="text-[#A8A29E] block text-[10px]">Customer WhatsApp</span>
                     <span className="font-semibold text-stone-800 font-mono">
                       {customerWhatsapp.startsWith('+91') ? customerWhatsapp : `+91 ${customerWhatsapp}`}
                     </span>
                   </div>
                   <div>
-                    <span className="text-stone-400 block text-[10px]">25% Advance Paid</span>
+                    <span className="text-stone-400 block text-[10px]">Booking Deposit Paid</span>
                     <span className="font-semibold text-emerald-700 font-mono">
                       {formatINR(advancePaise)}
                     </span>
@@ -815,7 +815,7 @@ export const BookingModal: React.FC = () => {
                 {formatINR(totalPaise)}
               </span>
               <span className="text-[10px] text-amber-800 font-medium ml-2">
-                (Advance: {formatINR(advancePaise)})
+                (Deposit: {formatINR(advancePaise)})
               </span>
             </div>
 
@@ -856,7 +856,7 @@ export const BookingModal: React.FC = () => {
                   onClick={handleProceedToPayment}
                   className="px-5 py-2.5 bg-[#1C1815] text-[#FAF8F5] hover:bg-stone-800 text-xs font-semibold rounded-xl transition-all shadow-sm"
                 >
-                  Review &amp; Pay 25% Advance
+                  Review &amp; Pay Booking Deposit
                 </button>
               )}
 
@@ -873,7 +873,7 @@ export const BookingModal: React.FC = () => {
                       <span>Authorizing UPI...</span>
                     </>
                   ) : (
-                    <span>Pay {formatINR(advancePaise)} Advance</span>
+                    <span>Pay Booking Deposit ({formatINR(advancePaise)})</span>
                   )}
                 </button>
               )}

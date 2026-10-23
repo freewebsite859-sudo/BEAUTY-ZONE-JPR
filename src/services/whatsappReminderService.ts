@@ -97,7 +97,7 @@ ${serviceList}
 
 💳 *Booking Status:*
 • Booking Reference: *#${booking.id}*
-• 25% Advance Paid: *₹${Math.ceil(booking.advancePaise / 100)}*
+• Booking Deposit Paid: *₹${Math.ceil(booking.advancePaise / 100)}*
 • Remaining Balance Payable at Salon: *₹${balanceRupees}*
 
 Please arrive 10 minutes prior to your appointment time. For any reschedule request, contact the salon directly at ${booking.parlourName}.

@@ -308,14 +308,14 @@ export const HomeShowcase: React.FC = () => {
               </div>
 
               <h1 className="font-serif-luxury text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight text-stone-900 leading-[1.12]">
-                Elegance &amp; Care, <br />
-                <span className="italic font-display-luxury font-normal text-amber-950">
-                  Reserved with 25% Advance.
+                Beauty &amp; Care, <br />
+                <span className="italic font-display-luxury font-normal text-stone-800">
+                  Book Your Parlour Slot Online.
                 </span>
               </h1>
 
               <p className="text-sm sm:text-base text-stone-600 leading-relaxed max-w-xl">
-                Discover curated beauty parlours, certified beauticians, and bridal makeup artists in your city. Lock your appointment with just a 25% advance in INR; pay the remaining 75% balance in person after your pampering ritual.
+                Discover top beauty parlours, beauticians, and bridal makeup artists in your city. Book your appointment easily online; pay the remaining balance at the salon after your service.
               </p>
 
               {/* Immediate Search Bar Hero with Recent Searches Persistence */}
@@ -474,7 +474,7 @@ export const HomeShowcase: React.FC = () => {
               <div className="flex items-center gap-6 pt-2 text-xs text-stone-500 flex-wrap">
                 <div className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-emerald-700" />
-                  <span>25% Advance Protection</span>
+                  <span>Booking Deposit Guarantee</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <Award className="w-4 h-4 text-amber-700" />
@@ -530,7 +530,7 @@ export const HomeShowcase: React.FC = () => {
                       Transparent Pricing
                     </div>
                     <div className="text-xs font-bold font-mono">
-                      Pay 25% Now · 75% at Salon
+                      Deposit Online · Balance at Salon
                     </div>
                   </div>
                 </div>
@@ -600,7 +600,7 @@ export const HomeShowcase: React.FC = () => {
               Popular Parlours &amp; Salons
             </h2>
             <p className="text-xs text-stone-500 mt-0.5">
-              Showing {filteredAndSortedParlours.length} verified parlour{filteredAndSortedParlours.length === 1 ? '' : 's'} accepting 25% advance
+              Showing {filteredAndSortedParlours.length} verified parlour{filteredAndSortedParlours.length === 1 ? '' : 's'} with online booking deposit
             </p>
           </div>
 
@@ -928,7 +928,7 @@ export const HomeShowcase: React.FC = () => {
                                 {formatINR(minPrice)}
                               </span>
                               <span className="text-[10px] text-emerald-700 font-medium">
-                                (25% adv: {formatINR(Math.ceil(minPrice * 0.25))})
+                                (Deposit: {formatINR(Math.ceil(minPrice * 0.25))})
                               </span>
                             </div>
                           </div>

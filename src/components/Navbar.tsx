@@ -73,7 +73,7 @@ export const Navbar: React.FC = () => {
                 </span>
               </div>
               <span className="text-[10px] tracking-wider uppercase text-stone-500 font-medium">
-                Verified Salon & Parlour Network · India
+                Verified Beauty Parlours &amp; Salons · India
               </span>
             </button>
 
@@ -131,7 +131,7 @@ export const Navbar: React.FC = () => {
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }
                 }}
-                placeholder="Search parlour, facial, bridal makeup, Rica waxing..."
+                placeholder="Search beauty parlours, facials, hair spa, bridal makeup..."
                 className="w-full pl-9 pr-4 py-2 text-xs bg-white border border-stone-200 rounded-full focus:outline-none focus:ring-1 focus:ring-amber-700 focus:border-amber-700 placeholder:text-stone-400 shadow-xs"
               />
               {searchQuery && (
@@ -151,11 +151,11 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('showcase')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
                 currentView === 'showcase'
-                  ? 'text-amber-900 bg-amber-100/60'
+                  ? 'text-amber-900 bg-amber-100/60 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
-              Discover
+              Find Parlours
             </button>
 
             <button
@@ -170,7 +170,7 @@ export const Navbar: React.FC = () => {
               }`}
             >
               <Calendar className="w-3.5 h-3.5" />
-              <span>Appointments</span>
+              <span>My Appointments</span>
               {upcomingBookingsCount > 0 && (
                 <span className="w-4 h-4 rounded-full bg-amber-700 text-white text-[10px] flex items-center justify-center font-bold">
                   {upcomingBookingsCount}
@@ -191,7 +191,7 @@ export const Navbar: React.FC = () => {
               title="Quick access to bookmarked salons and beauticians in customer portal"
             >
               <Heart className={`w-3.5 h-3.5 transition-colors ${totalFavoritesCount > 0 ? 'text-rose-500 fill-rose-500' : 'text-stone-400'}`} />
-              <span>Saved</span>
+              <span>Saved Salons</span>
               {totalFavoritesCount > 0 && (
                 <span className="w-4 h-4 rounded-full bg-rose-500 text-white text-[10px] flex items-center justify-center font-bold">
                   {totalFavoritesCount}
@@ -203,24 +203,24 @@ export const Navbar: React.FC = () => {
               onClick={() => setCurrentView('owner_dashboard')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
                 currentView === 'owner_dashboard'
-                  ? 'text-amber-900 bg-amber-100/60'
+                  ? 'text-amber-900 bg-amber-100/60 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
               <Store className="w-3.5 h-3.5 text-stone-500" />
-              <span>Parlour Portal</span>
+              <span>Parlour Owner Portal</span>
             </button>
 
             <button
               onClick={() => setCurrentView('super_admin')}
               className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors flex items-center gap-1.5 ${
                 currentView === 'super_admin'
-                  ? 'text-amber-900 bg-amber-100/60'
+                  ? 'text-amber-900 bg-amber-100/60 font-semibold'
                   : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
               }`}
             >
               <Shield className="w-3.5 h-3.5 text-stone-500" />
-              <span>Super Admin</span>
+              <span>Admin Console</span>
             </button>
           </nav>
 

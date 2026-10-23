@@ -1,6 +1,6 @@
 {
-  "name": "BeautyZone — Indian Salon & Beauty Parlour Platform",
-  "description": "Multi-tenant salon & beauty parlour platform for India with 25% advance booking, verified beauticians, daily auto-payouts, and salon management.",
+  "name": "BeautyZone — Verified Beauty Parlours & Salons in India",
+  "description": "Discover verified beauty parlours, salon appointments, and bridal makeup artists across India. Book your slot online with a small booking deposit and pay the balance directly at the parlour.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
