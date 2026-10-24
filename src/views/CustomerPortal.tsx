@@ -788,6 +788,16 @@ export const CustomerPortal: React.FC = () => {
                 {customerProfile?.whatsappNumber || '+91 98200 44321'}
               </span>
             </div>
+
+            <div className="p-4 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between">
+              <div>
+                <span className="text-amber-900 font-bold block text-sm">Loyalty Points Balance</span>
+                <span className="text-stone-600 text-[11px]">Earn points with every booking</span>
+              </div>
+              <div className="text-xl font-bold font-mono text-amber-950">
+                {customerProfile?.loyaltyPoints || 0} pts
+              </div>
+            </div>
           </div>
         </div>
       )}

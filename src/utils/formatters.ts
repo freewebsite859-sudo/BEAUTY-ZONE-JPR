@@ -109,3 +109,47 @@ export function getWhatsAppConfirmationMessage(params: {
     `• Balance Payable at Salon: ${formatINR(params.balancePaise)}\n\n` +
     `Please arrive 10 minutes prior to your slot. Have a wonderful parlour experience! 🌸`;
 }
+
+// Generate .ics file content for calendar events
+export function generateICS(booking: {
+  id: string;
+  parlourName: string;
+  parlourAddress: string;
+  appointmentDate: string; // DD/MM/YYYY
+  appointmentTime: string; // HH:MM AM/PM
+  services: string[];
+}): string {
+  // Parsing Indian Date/Time string
+  const [day, month, year] = booking.appointmentDate.split('/').map(Number);
+  const [time, period] = booking.appointmentTime.split(' ');
+  let [hours, minutes] = time.split(':').map(Number);
+  
+  if (period === 'PM' && hours < 12) hours += 12;
+  if (period === 'AM' && hours === 12) hours = 0;
+
+  // Create date object in IST
+  const date = new Date(year, month - 1, day, hours, minutes);
+  
+  // Convert IST (UTC+5:30) to UTC for ICS format
+  const utcDate = new Date(date.getTime() - (5 * 60 + 30) * 60 * 1000);
+  const endDate = new Date(utcDate.getTime() + 60 * 60 * 1000); // Assume 1hr duration for calendar
+
+  const formatICSDate = (d: Date) => d.toISOString().replace(/[-:]/g, '').split('.')[0] + 'Z';
+
+  return [
+    'BEGIN:VCALENDAR',
+    'VERSION:2.0',
+    'PRODID:-//BeautyZone//Appointment//EN',
+    'BEGIN:VEVENT',
+    `UID:${booking.id}`,
+    `DTSTAMP:${formatICSDate(new Date())}`,
+    `DTSTART:${formatICSDate(utcDate)}`,
+    `DTEND:${formatICSDate(endDate)}`,
+    `SUMMARY:BeautyZone: Appointment at ${booking.parlourName}`,
+    `DESCRIPTION:Services: ${booking.services.join(', ')}`,
+    `LOCATION:${booking.parlourAddress}`,
+    'END:VEVENT',
+    'END:VCALENDAR',
+  ].join('\r\n');
+}
+

@@ -20,6 +20,7 @@ import {
   calculateAdvance,
   formatDateIST,
   getWhatsAppConfirmationMessage,
+  generateICS,
 } from '../utils/formatters';
 import { SalonService, StaffMember } from '../types';
 
@@ -251,6 +252,27 @@ export const BookingModal: React.FC = () => {
     navigator.clipboard.writeText(msg);
     setCopiedWhatsApp(true);
     setTimeout(() => setCopiedWhatsApp(false), 3000);
+  };
+
+  const downloadICS = () => {
+    if (!confirmedBookingId) return;
+    const icsContent = generateICS({
+      id: confirmedBookingId,
+      parlourName: activeParlour.name,
+      parlourAddress: activeParlour.address,
+      appointmentDate: appointmentDate,
+      appointmentTime: appointmentTime,
+      services: selectedServicesList.map((s) => s.name),
+    });
+    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `appointment_${confirmedBookingId}.ics`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   return (
@@ -788,6 +810,14 @@ export const BookingModal: React.FC = () => {
                       <span>Copy WhatsApp Booking Slip</span>
                     </>
                   )}
+                </button>
+
+                <button
+                  onClick={downloadICS}
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-semibold flex items-center justify-center gap-2 transition-colors shadow-xs"
+                >
+                  <Calendar className="w-4 h-4" />
+                  <span>Add to Calendar</span>
                 </button>
 
                 <button

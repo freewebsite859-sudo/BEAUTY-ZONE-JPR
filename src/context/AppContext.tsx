@@ -81,6 +81,10 @@ interface AppContextType {
   isFavoriteParlour: (parlourId: string) => boolean;
   isFavoriteStaff: (staffId: string) => boolean;
 
+  // Loyalty Points
+  addLoyaltyPoints: (points: number) => void;
+  redeemLoyaltyPoints: (points: number) => boolean;
+
   // Actions
   registerCustomer: (data: { fullName: string; email: string; dob: string; whatsappNumber: string }) => boolean;
   registerOwnerAndParlour: (ownerData: { fullName: string; email: string; whatsappNumber: string }, parlourData: Partial<Parlour>) => void;
@@ -142,6 +146,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     dob: '1998-06-14',
     whatsappNumber: '+91 98200 44321',
     createdAt: '2024-05-10T12:00:00Z',
+    loyaltyPoints: 150,
   });
   const [ownerProfile, setOwnerProfile] = useState<SalonOwnerProfile | null>({
     id: 'owner-1',
@@ -288,6 +293,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       dob: data.dob,
       whatsappNumber: data.whatsappNumber.startsWith('+91') ? data.whatsappNumber : `+91 ${data.whatsappNumber}`,
       createdAt: new Date().toISOString(),
+      loyaltyPoints: 0,
     };
     setCustomerProfile(newCustomer);
     setCurrentUserRole('customer');
@@ -374,23 +380,39 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     );
   };
 
+  const addLoyaltyPoints = (points: number) => {
+    setCustomerProfile((prev) => prev ? { ...prev, loyaltyPoints: prev.loyaltyPoints + points } : null);
+  };
+
+  const redeemLoyaltyPoints = (points: number): boolean => {
+    if (!customerProfile || customerProfile.loyaltyPoints < points) return false;
+    setCustomerProfile({ ...customerProfile, loyaltyPoints: customerProfile.loyaltyPoints - points });
+    return true;
+  };
+
   const recordBalancePaymentAtSalon = (
     bookingId: string,
     paymentMode: 'cash' | 'upi_at_salon' | 'card_at_salon'
   ) => {
+    let pointsToAward = 0;
     setBookings((prev) =>
-      prev.map((b) =>
-        b.id === bookingId
-          ? {
-              ...b,
-              balancePaymentStatus: 'paid_at_salon',
-              balancePaymentMode: paymentMode,
-              balancePaidAt: new Date().toISOString(),
-              status: 'completed',
-            }
-          : b
-      )
+      prev.map((b) => {
+        if (b.id === bookingId) {
+          pointsToAward = Math.floor(b.totalPaise / 100 / 100);
+          return {
+            ...b,
+            balancePaymentStatus: 'paid_at_salon',
+            balancePaymentMode: paymentMode,
+            balancePaidAt: new Date().toISOString(),
+            status: 'completed',
+          };
+        }
+        return b;
+      })
     );
+    if (pointsToAward > 0) {
+      addLoyaltyPoints(pointsToAward);
+    }
   };
 
   const addReview = (review: Omit<Review, 'id' | 'date'>) => {
@@ -539,6 +561,8 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         updateInventoryQuantity,
         triggerDaily10PMPayout,
         updatePlatformSettings,
+        addLoyaltyPoints,
+        redeemLoyaltyPoints,
       }}
     >
       {children}

@@ -7,6 +7,7 @@ export interface CustomerProfile {
   dob: string; // YYYY-MM-DD format, must be 16+ years
   whatsappNumber: string; // e.g., +91 98200 12345
   createdAt: string;
+  loyaltyPoints: number;
 }
 
 export interface SalonOwnerProfile {
@@ -42,6 +43,8 @@ export interface Parlour {
   gstin?: string;
   coverImage: string;
   images: string[];
+  lat?: number;
+  lng?: number;
   rating: number;
   reviewCount: number;
   openingTime: string;
@@ -91,6 +94,7 @@ export interface StaffMember {
   photo: string;
   bio: string;
   specializations: string[];
+  portfolioImages: string[];
   isPresentToday: boolean;
   commissionPercent: number; // e.g. 15%
 }

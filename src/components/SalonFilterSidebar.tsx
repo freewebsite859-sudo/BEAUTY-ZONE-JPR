@@ -28,6 +28,8 @@ export interface SalonFilters {
   customMaxPrice: string; // INR in Rupees
   minRating: number | null;
   onlyFavorites?: boolean;
+  proximityRadius: number | null; // 5, 10, 20 km or null
+  userCoords: { lat: number; lng: number } | null;
   sortBy: 'recommended' | 'rating_desc' | 'reviews_desc' | 'price_asc' | 'price_desc';
 }
 
@@ -40,6 +42,8 @@ export const defaultFilters: SalonFilters = {
   customMaxPrice: '',
   minRating: null,
   onlyFavorites: false,
+  proximityRadius: null,
+  userCoords: null,
   sortBy: 'recommended',
 };
 
@@ -253,6 +257,82 @@ export const SalonFilterSidebar: React.FC<SalonFilterSidebarProps> = ({
             {savedParloursCount}
           </span>
         </button>
+      </div>
+
+      {/* Proximity / Geolocation Filter Section */}
+      <div className="p-3 bg-amber-50/70 rounded-xl border border-amber-200/80 space-y-2.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <MapPin className="w-4 h-4 text-amber-800" />
+            <span className="text-xs font-bold text-stone-900">
+              Proximity Search (GPS)
+            </span>
+          </div>
+          {filters.proximityRadius && (
+            <button
+              type="button"
+              onClick={() => onChange({ ...filters, proximityRadius: null, userCoords: null })}
+              className="text-[10px] text-amber-900 hover:underline cursor-pointer"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
+        <p className="text-[10px] text-stone-600">
+          {filters.userCoords
+            ? `Location acquired (${filters.userCoords.lat.toFixed(2)}, ${filters.userCoords.lng.toFixed(2)})`
+            : 'Find salons within radius of your GPS location.'}
+        </p>
+
+        <div className="grid grid-cols-3 gap-1.5 pt-1">
+          {[5, 10, 20].map((km) => {
+            const isSelected = filters.proximityRadius === km;
+            return (
+              <button
+                key={km}
+                type="button"
+                onClick={() => {
+                  if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                      (position) => {
+                        onChange({
+                          ...filters,
+                          proximityRadius: km,
+                          userCoords: {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude,
+                          },
+                        });
+                      },
+                      () => {
+                        // Fallback Mumbai default coords if geo permission denied
+                        onChange({
+                          ...filters,
+                          proximityRadius: km,
+                          userCoords: { lat: 19.0760, lng: 72.8777 },
+                        });
+                      }
+                    );
+                  } else {
+                    onChange({
+                      ...filters,
+                      proximityRadius: km,
+                      userCoords: { lat: 19.0760, lng: 72.8777 },
+                    });
+                  }
+                }}
+                className={`py-1.5 px-2 text-[11px] font-bold rounded-lg border transition-all cursor-pointer text-center ${
+                  isSelected
+                    ? 'bg-amber-800 text-white border-amber-900 shadow-2xs'
+                    : 'bg-white text-stone-700 border-stone-200 hover:border-amber-400'
+                }`}
+              >
+                Within {km} km
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Recent Searches Section */}

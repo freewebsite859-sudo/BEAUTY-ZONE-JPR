@@ -10,6 +10,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { BookingModal } from './components/BookingModal';
 import { AuthModal } from './components/AuthModal';
+import { NotificationManager } from './components/NotificationManager';
 
 // Views
 import { HomeShowcase } from './views/HomeShowcase';
@@ -44,6 +45,7 @@ export default function App() {
         <Footer />
         <BookingModal />
         <AuthModal />
+        <NotificationManager />
       </div>
     </AppProvider>
   );

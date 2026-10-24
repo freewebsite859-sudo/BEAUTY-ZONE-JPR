@@ -46,6 +46,7 @@ export const Navbar: React.FC = () => {
     'Bengaluru',
     'Hyderabad',
     'Pune',
+    'Jaipur',
   ];
 
   const upcomingBookingsCount = bookings.filter(

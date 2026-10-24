@@ -255,6 +255,25 @@ export const HomeShowcase: React.FC = () => {
         return false;
       }
 
+      // 9. Proximity Geolocation Radius filter (5km, 10km, 20km)
+      if (filters.proximityRadius !== null && filters.userCoords && parlour.lat !== undefined && parlour.lng !== undefined) {
+        const R = 6371; // Earth radius in km
+        const dLat = ((parlour.lat - filters.userCoords.lat) * Math.PI) / 180;
+        const dLon = ((parlour.lng - filters.userCoords.lng) * Math.PI) / 180;
+        const a =
+          Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+          Math.cos((filters.userCoords.lat * Math.PI) / 180) *
+            Math.cos((parlour.lat * Math.PI) / 180) *
+            Math.sin(dLon / 2) *
+            Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distanceKm = R * c;
+
+        if (distanceKm > filters.proximityRadius) {
+          return false;
+        }
+      }
+
       return true;
     });
 
